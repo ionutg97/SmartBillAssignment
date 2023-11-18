@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 public class Result {
 
     @JsonProperty("clientId")
-    private Long clientId;
+    private String clientId;
 
     @JsonProperty("sum")
-    private Long sum;
+    private Integer sum;
 
 }
