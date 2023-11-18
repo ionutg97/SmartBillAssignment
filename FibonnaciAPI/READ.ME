@@ -1,0 +1,21 @@
+Define the assignment for Fibonnaci REST API
+
+Un API REST-full ce expune functionalitatea necesara pentru lucrul cu numere din seventa Fibonnaci. Un utilizator trebuie sa poata:
+- genera "urmatorul" numar din seventa Fibonnaci asociata lui
+- cere trecerea inapoi cu o pozitie in secventa sa de numere
+- lista toate numerele din seventa sa generate pana la momentul curent
+
+Ex:
+client1 -> apel generare 1 -> rezultat: 1
+client1 -> apel generare 2 -> rezultat: 1
+client1 -> apel generare 3 -> rezultat: 2
+client2 -> apel generare 1 -> rezultat: 1
+client1 -> apel generare 4 -> rezultat: 3
+client2 -> apel generare 2 -> rezultat: 1
+client2 -> apel pas inapoi 1 -> rezultat: OK
+client2 -> apel generare 3 -> rezultat: 1
+client2 -> apel generare 4 -> rezultat: 2
+client1 -> apel listare valori generate -> rezultat: 1, 1, 2, 3
+
+Tehnic, nu exista niciun fel de restrictii referitor la ce tehnologii/limbaje de programare vrei sa folosesti in implementare.
+ As recomanda Java cu Spring Boot sau Micronaut dar cum ziceam, e strict la latitudinea ta.
