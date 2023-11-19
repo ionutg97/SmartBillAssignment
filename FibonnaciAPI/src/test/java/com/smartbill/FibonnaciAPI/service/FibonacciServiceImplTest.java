@@ -29,13 +29,13 @@ class FibonacciServiceImplTest {
 
   @ParameterizedTest
   @CsvSource({
+    "client1,1,0",
     "client1,1,1",
-    "client1,1,2",
-    "client1,2,3",
+    "client1,2,2",
+    "client2,1,0",
+    "client1,3,3",
     "client2,1,1",
-    "client1,3,4",
-    "client2,1,2",
-    "client1,5,5",
+    "client1,5,4",
   })
   void calculateSumAndPersistSequence_whenNumberIsGreaterThanZero_thenGetTheNextElementInSequence(
       String clientId, Integer expectedNumber, Integer number) {

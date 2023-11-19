@@ -18,7 +18,7 @@ public class FibonacciServiceImpl implements FibonacciService {
   public Integer addNextNumberAndPersistSequence(String clientId) {
     var number = 1;
     if (fibonacciRepo.getSequence(clientId) != null) {
-      number = fibonacciRepo.getSequence(clientId).size();
+      number = fibonacciRepo.getSequence(clientId).size()+1;
     }
     Integer lastNumberInSequence = generateFibonacciSequence(number);
     fibonacciRepo.saveNumber(clientId, lastNumberInSequence);
