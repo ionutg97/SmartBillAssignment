@@ -42,6 +42,6 @@ public class FibonacciController {
   @GetMapping("/sequence/{clientId}")
   public ResponseEntity<List<Integer>> getSequenceOfNumbers(
       @PathVariable("clientId") String clientId) {
-    return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    return new ResponseEntity<>(service.getSequence(clientId), HttpStatus.OK);
   }
 }

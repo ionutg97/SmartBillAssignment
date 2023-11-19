@@ -39,7 +39,7 @@ public class FibonacciServiceImpl implements FibonacciService {
 
   @Override
   public List<Integer> getSequence(String clientId) {
-    return new ArrayList<>();
+    return fibonacciRepo.getSequence(clientId);
   }
 
   private Integer calculateFibonacciSum(Integer number) {

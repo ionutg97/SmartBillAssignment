@@ -32,4 +32,26 @@ class FibonacciRepoImplTest {
         assertEquals(2, fibonacciRepo.getSequence("client1").size());
         assertEquals(List.of(1,2), fibonacciRepo.getSequence("client1"));
     }
+
+    @Test
+    void removeLastNumber_whenClientIdExists_thenRemoveLastNumberFromList() {
+        fibonacciRepo.saveNumber("client1",1);
+        fibonacciRepo.saveNumber("client1",2);
+        fibonacciRepo.removeLastNumber("client1");
+        assertEquals(1, fibonacciRepo.getSequence("client1").size());
+        assertEquals(List.of(1), fibonacciRepo.getSequence("client1"));
+    }
+
+    @Test
+    void removeLastNumber_whenClientIdDoesNotExist_thenDoNothing() {
+        fibonacciRepo.removeLastNumber("client1");
+        assertNull(fibonacciRepo.getSequence("client1"));
+    }
+
+    @Test
+    void getSequence_whenClientIdExists_thenReturnSequence() {
+        fibonacciRepo.saveNumber("client1",1);
+        fibonacciRepo.saveNumber("client1",2);
+        assertEquals(List.of(1,2), fibonacciRepo.getSequence("client1"));
+    }
 }

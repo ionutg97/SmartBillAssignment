@@ -60,6 +60,12 @@ class FibonacciServiceImplTest {
   void removeLastNumberAndPersistSequence_whenSequenceIsEmpty_thenReturn0() {
     when(fibonacciRepo.getSequence("client1")).thenReturn(new ArrayList<>());
     assertEquals(0, fibonacciService.removeLastNumberAndPersistSequence("client1"));
+    }
+  @Test
+  void getSequence_whenClientIdExist_thenReturnSequence() {
+    when(fibonacciRepo.getSequence("client1")).thenReturn(generateFibonacciSequence(7));
+    assertEquals(7, fibonacciService.getSequence("client1").size());
+    assertEquals(List.of(1,1,2,3,5,8,13), fibonacciService.getSequence("client1"));
   }
 
   @Test
