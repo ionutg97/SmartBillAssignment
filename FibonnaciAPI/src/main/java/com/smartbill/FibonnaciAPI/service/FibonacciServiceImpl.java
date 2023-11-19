@@ -26,8 +26,15 @@ public class FibonacciServiceImpl implements FibonacciService {
   }
 
   @Override
-  public Integer getPreviousSum(String clientId) {
-    return null;
+  public Integer removeLastNumberAndPersistSequence(String clientId) {
+    if (fibonacciRepo.getSequence(clientId) != null
+        && !fibonacciRepo.getSequence(clientId).isEmpty()) {
+      var sequence = fibonacciRepo.getSequence(clientId);
+      fibonacciRepo.removeLastNumber(clientId);
+      return sequence.get(sequence.size() - 1);
+    } else {
+      return 0;
+    }
   }
 
   @Override

@@ -6,7 +6,7 @@ public interface FibonacciService {
 
   Integer addNextNumberAndPersistSequence(String clientId);
 
-  Integer getPreviousSum(String clientId);
+  Integer removeLastNumberAndPersistSequence(String clientId);
 
   List<Integer> getSequence(String clientId);
 }

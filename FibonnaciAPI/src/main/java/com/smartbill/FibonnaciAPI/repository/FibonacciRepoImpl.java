@@ -26,6 +26,15 @@ public class FibonacciRepoImpl implements FibonacciRepo {
   }
 
   @Override
+  public void removeLastNumber(String clientId) {
+    if (fibonacciSequence.containsKey(clientId)) {
+      var listOfNumbers =
+          fibonacciSequence.get(clientId).subList(0, fibonacciSequence.get(clientId).size() - 1);
+      fibonacciSequence.put(clientId, listOfNumbers);
+    }
+  }
+
+  @Override
   public List<Integer> getSequence(String clientId) {
     return fibonacciSequence.get(clientId);
   }

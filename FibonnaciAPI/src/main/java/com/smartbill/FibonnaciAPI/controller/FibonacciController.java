@@ -23,7 +23,8 @@ public class FibonacciController {
   @Autowired private final FibonacciService service;
 
   @PostMapping("/nextNumber/{clientId}")
-  public ResponseEntity<Result> generateNextElementInSequence(@PathVariable("clientId") String clientId) {
+  public ResponseEntity<Result> generateNextElementInSequence(
+      @PathVariable("clientId") String clientId) {
 
     var sum = service.addNextNumberAndPersistSequence(clientId);
     var result = new Result(clientId, sum);
@@ -31,8 +32,11 @@ public class FibonacciController {
   }
 
   @GetMapping("/previousNumber/{clientId}")
-  public ResponseEntity<String> previousSumForNumber(@PathVariable("clientId") String clientId) {
-    return new ResponseEntity<>("OK", HttpStatus.OK);
+  public ResponseEntity<String> previousElementInSequence(
+      @PathVariable("clientId") String clientId) {
+    var lastNumberInSequence = service.removeLastNumberAndPersistSequence(clientId);
+    if (lastNumberInSequence > 0) return new ResponseEntity<>("OK", HttpStatus.OK);
+    else return new ResponseEntity<>("No numbers in sequence", HttpStatus.OK);
   }
 
   @GetMapping("/sequence/{clientId}")
