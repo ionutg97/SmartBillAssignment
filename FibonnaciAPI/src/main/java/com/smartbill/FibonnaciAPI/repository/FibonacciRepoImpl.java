@@ -3,39 +3,31 @@ package com.smartbill.FibonnaciAPI.repository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.function.Predicate;
 
 @Repository
 public class FibonacciRepoImpl implements FibonacciRepo {
 
-  private final LinkedHashMap<String, List<Integer>> fibonacciSequence = new LinkedHashMap<>();
+  private final ConcurrentHashMap<String, ConcurrentLinkedDeque<Integer>> fibonacciSequence = new ConcurrentHashMap<>();
 
   @Override
   public void saveNumber(String clientId, Integer number) {
-
-    if (!fibonacciSequence.containsKey(clientId)) {
-      var listOfNumbers = new ArrayList<Integer>();
-      listOfNumbers.add(number);
-      fibonacciSequence.put(clientId, listOfNumbers);
-    } else {
-      var listOfNumbers = fibonacciSequence.get(clientId);
-      listOfNumbers.add(number);
-      fibonacciSequence.put(clientId, listOfNumbers);
-    }
+    fibonacciSequence.computeIfAbsent(clientId, id -> new ConcurrentLinkedDeque<>()).add(number);
   }
 
   @Override
-  public void removeLastNumber(String clientId) {
-    if (fibonacciSequence.containsKey(clientId)) {
-      var listOfNumbers =
-          fibonacciSequence.get(clientId).subList(0, fibonacciSequence.get(clientId).size() - 1);
-      fibonacciSequence.put(clientId, listOfNumbers);
-    }
+  public Optional<Integer> removeLastNumber(String clientId) {
+    return Optional.ofNullable(fibonacciSequence.get(clientId))
+                   .filter(Predicate.not(ConcurrentLinkedDeque::isEmpty))
+                   .map(ConcurrentLinkedDeque::removeLast);
   }
 
   @Override
-  public List<Integer> getSequence(String clientId) {
-    return fibonacciSequence.get(clientId);
+  public Optional<List<Integer>> getSequence(String clientId) {
+    return Optional.ofNullable(fibonacciSequence.get(clientId)).map(ArrayList::new);
   }
 }
