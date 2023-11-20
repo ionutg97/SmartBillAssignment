@@ -10,9 +10,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,9 +28,7 @@ class FibonacciServiceImplTest {
   private FibonacciServiceImpl fibonacciService;
 
   @BeforeEach
-  void setUp() {
-    fibonacciService = new FibonacciServiceImpl(fibonacciRepo);
-  }
+  void setUp() { fibonacciService = new FibonacciServiceImpl(fibonacciRepo); }
 
   @ParameterizedTest
   @CsvSource({
@@ -39,47 +42,46 @@ class FibonacciServiceImplTest {
   })
   void calculateSumAndPersistSequence_whenNumberIsGreaterThanZero_thenGetTheNextElementInSequence(
       String clientId, Integer expectedNumber, Integer number) {
-    when(fibonacciRepo.getSequence(clientId)).thenReturn(generateFibonacciSequence(number));
+    when(fibonacciRepo.getSequence(clientId)).thenReturn(Optional.of(generateFibonacciSequence(number)));
     assertEquals(expectedNumber, fibonacciService.addNextNumberAndPersistSequence(clientId));
   }
 
   @Test
   void
       removeLastNumberAndPersistSequence_whenSequenceExistsForGivenClient_thenRemoveTheLastElement() {
-    when(fibonacciRepo.getSequence("client1")).thenReturn(generateFibonacciSequence(3));
-    assertEquals(2, fibonacciService.removeLastNumberAndPersistSequence("client1"));
+    final List<Integer> sequence = generateFibonacciSequence(3);
+    when(fibonacciRepo.removeLastNumber("client1")).thenReturn(Optional.of(sequence.get(sequence.size() - 1)));
+    assertEquals(Optional.of(2), fibonacciService.removeLastNumberAndPersistSequence("client1"));
   }
 
   @Test
   void removeLastNumberAndPersistSequence_whenSequenceDoNotExist_thenReturn0() {
-    when(fibonacciRepo.getSequence("client1")).thenReturn(null);
-    assertEquals(0, fibonacciService.removeLastNumberAndPersistSequence("client1"));
+    assertFalse(fibonacciService.removeLastNumberAndPersistSequence("client1").isPresent());
   }
 
   @Test
   void removeLastNumberAndPersistSequence_whenSequenceIsEmpty_thenReturn0() {
-    when(fibonacciRepo.getSequence("client1")).thenReturn(new ArrayList<>());
-    assertEquals(0, fibonacciService.removeLastNumberAndPersistSequence("client1"));
-    }
+    assertFalse(fibonacciService.removeLastNumberAndPersistSequence("client1").isPresent());
+  }
+
   @Test
   void getSequence_whenClientIdExist_thenReturnSequence() {
-    when(fibonacciRepo.getSequence("client1")).thenReturn(generateFibonacciSequence(7));
+    when(fibonacciRepo.getSequence("client1")).thenReturn(Optional.of(generateFibonacciSequence(7)));
     assertEquals(7, fibonacciService.getSequence("client1").size());
     assertEquals(List.of(1,1,2,3,5,8,13), fibonacciService.getSequence("client1"));
   }
 
   @Test
   void removeLastNumberAndPersistSequence_whenNumberIsGreaterThanZero_thenCalculateSum() {
-    when(fibonacciRepo.getSequence("client1")).thenReturn(generateFibonacciSequence(3));
-    assertEquals(2, fibonacciService.removeLastNumberAndPersistSequence("client1"));
+    final List<Integer> integers = generateFibonacciSequence(3);
+    when(fibonacciRepo.removeLastNumber("client1")).thenReturn(Optional.of(integers.get(integers.size() - 1)));
+    assertEquals(Optional.of(2), fibonacciService.removeLastNumberAndPersistSequence("client1"));
   }
 
   private List<Integer> generateFibonacciSequence(Integer number) {
-    var fibonacciSequence = new ArrayList<Integer>();
-    for (int i = 1; i <= number; i++) {
-      fibonacciSequence.add(calculateFibonacciSum(i));
-    }
-    return fibonacciSequence;
+    return IntStream.range(1, number + 1)
+                    .mapToObj(this::calculateFibonacciSum)
+                    .collect(Collectors.toList());
   }
 
   private Integer calculateFibonacciSum(Integer number) {

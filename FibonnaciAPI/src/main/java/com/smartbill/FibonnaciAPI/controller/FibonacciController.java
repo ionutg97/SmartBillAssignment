@@ -35,7 +35,7 @@ public class FibonacciController {
   public ResponseEntity<String> previousElementInSequence(
       @PathVariable("clientId") String clientId) {
     var lastNumberInSequence = service.removeLastNumberAndPersistSequence(clientId);
-    if (lastNumberInSequence > 0) return new ResponseEntity<>("OK", HttpStatus.OK);
+    if (lastNumberInSequence.isPresent()) return new ResponseEntity<>("OK", HttpStatus.OK);
     else return new ResponseEntity<>("No numbers in sequence", HttpStatus.OK);
   }
 
